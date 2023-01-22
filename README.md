@@ -1,4 +1,4 @@
-# Wabbit
+# Crab2
 
 A crappy `bunnylol` (also known as [`bunny1`](https://github.com/ccheever/bunny1)) clone written in Rust for my personal needs.
 
@@ -12,4 +12,4 @@ This "search engine" has support for these different sites:
 
 ## Technologies
 
-This engine uses Rust with Axum, Tokio, and Serde. It also has usage logging with tracing and tracing-subscriber.
+This "engine" uses Rust with Axum, Tokio, and Serde. It also has usage logging with tracing and tracing-subscriber.
