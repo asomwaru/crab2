@@ -3,19 +3,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Crab1</title>
+    <title>Crab2</title>
     <link href="output.css" rel="stylesheet" />
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
   </head>
-  <body class="w-full h-full flex flex-col">
+  <body class="w-full h-full flex flex-col bg-slate-50">
     <nav class="w-full flex">
-      <a href="index.html" class="text-2xl mx-4 my-2 font-bold text-gray-700"
-        >Crab1</a
-      >
-      <div class="w-1/2 flex justify-center items-center">
-        <a href="index.html" class="nav-item">Home</a>
-        <a href="about.html" class="nav-item">About</a>
-        <a href="contact.html" class="nav-item">Contact</a>
-      </div>
+			<img class="cursor-pointer" src="hermit.svg" alt="Free Image of Hermit Crab" width="64" height="36">
+      <a href="index.html" class="text-2xl my-2 font-bold text-gray-700">
+        Crab2
+      </a>
     </nav>
+		<main class="flex-1 flex flex-col items-center justify-center h-full">
+			<h1 class="text-4xl font-bold text-gray-700">Crab2</h1>
+			<p class="text-gray-700">A dumb, simple, Rust-based clone of <a class="underline" href="https://github.com/ccheever/bunny1">Bunny1</a>.</p>
+
+			<section class="w-3/5 mt-4">
+				<input id="search" type="text" placeholder="Enter your search term"/>
+			</section>
   </body>
+	<script>
+		const search = document.getElementById('search');
+		
+	</script>
 </html>
