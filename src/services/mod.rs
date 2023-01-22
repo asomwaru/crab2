@@ -7,19 +7,18 @@ use axum::extract::Query;
 use axum::routing::get;
 use axum::Router;
 use serde::Deserialize;
-use serde::Serialize;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Debug)]
 pub struct SearchParams {
-    query: String,
+    pub query: String,
 }
 
 pub fn routes() -> Router {
-    Router::new().route("/search", get(cargo::handler))
+    Router::new().route("/search", get(search_handler))
 }
 
-async fn greet_handler(Query(params): Query<SearchParams>) -> &'static str {
-    println("{}", params.query);
+async fn search_handler(params: Query<SearchParams>) -> String {
+    println!("{}", params.query);
 
-    "Hello, World!"
+    params.query.clone()
 }

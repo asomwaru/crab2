@@ -1,14 +1,18 @@
-use axum::{routing::get, Router};
 use clap::Parser;
+use dirs::home_dir;
 use http::Method;
 use tower_http::cors::{Any, CorsLayer};
 
+use std::fs::create_dir_all;
 use std::net::IpAddr;
 use std::net::SocketAddr;
 use std::str::FromStr;
 
 mod helpers;
 use helpers::port_in_range;
+
+mod services;
+use services::routes;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -22,12 +26,25 @@ struct Cli {
 
 #[tokio::main]
 async fn main() {
+    let log_dir = format!(
+        "{}/.config/crab2/logs",
+        home_dir()
+            .expect("Could not get home dir")
+            .to_str()
+            .expect("Could not get home dir as str")
+    );
+    create_dir_all("~/.config/crab2/logs").expect("Failed to create logging directory");
+
+    tracing_subscriber::fmt()
+        .with_writer(tracing_appender::rolling::hourly(log_dir, "crab2.log"))
+        .init();
+
     let args = Cli::parse();
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
         .allow_origin(Any);
 
-    let app = Router::new().route("/", get(handler)).layer(cors);
+    let app = routes().layer(cors);
 
     // run it
     let addr = SocketAddr::from((args.address, args.port));
@@ -36,8 +53,4 @@ async fn main() {
         .serve(app.into_make_service())
         .await
         .unwrap();
-}
-
-async fn handler() -> &'static str {
-    "Hello, World!"
 }
