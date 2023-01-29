@@ -4,6 +4,8 @@ mod github;
 mod google;
 mod yt;
 
+use cargo::Cargo;
+use ddg::DuckDuckGo;
 use google::Google;
 
 use crate::helpers::SearchQuery;
@@ -16,7 +18,7 @@ use serde::Deserialize;
 use tracing::info;
 
 #[derive(Deserialize, Debug)]
-pub struct SearchParams {
+struct SearchParams {
     pub query: String,
 }
 
@@ -27,15 +29,13 @@ pub fn routes() -> Router {
 async fn search_handler(params: Query<SearchParams>) -> Redirect {
     println!("{}", params.query);
 
-    // et [x, xs @ ..] = [1, 2, 3]
-
     let split = params.query.split_whitespace().collect::<Vec<_>>();
     let cmd = split[0];
     let query = split[1..].join(" ");
 
     match cmd {
-        // "cargo" => cargo::search(params.query).await,
-        // "ddg" => ddg::search(params.query).await,
+        "cargo" => Cargo::search(None, params.query.clone()),
+        "ddg" => DuckDuckGo::search(None, params.query.clone()),
         // "github" => github::search(params.query).await,
         // "yt" => yt::search(params.query).await,
         "g" => Google::search(Some(cmd.to_string()), query),
