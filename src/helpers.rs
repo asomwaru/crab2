@@ -1,5 +1,7 @@
 use std::ops::RangeInclusive;
 
+use axum::response::Redirect;
+
 const PORT_RANGE: RangeInclusive<usize> = 1..=65535;
 
 pub fn port_in_range(s: &str) -> Result<u16, String> {
@@ -16,4 +18,8 @@ pub fn port_in_range(s: &str) -> Result<u16, String> {
             PORT_RANGE.end()
         ))
     }
+}
+
+pub trait SearchQuery {
+    fn search(cmd: Option<String>, query: String) -> Redirect;
 }

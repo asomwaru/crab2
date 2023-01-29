@@ -33,7 +33,7 @@ async fn main() {
             .to_str()
             .expect("Could not get home dir as str")
     );
-    create_dir_all("~/.config/crab2/logs").expect("Failed to create logging directory");
+    create_dir_all(&log_dir).expect("Failed to create logging directory");
 
     tracing_subscriber::fmt()
         .with_writer(tracing_appender::rolling::hourly(log_dir, "crab2.log"))
