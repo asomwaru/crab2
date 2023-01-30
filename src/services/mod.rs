@@ -14,6 +14,7 @@ use axum::extract::Query;
 use axum::response::Redirect;
 use axum::routing::get;
 use axum::Router;
+use axum_extra::routing::SpaRouter;
 use serde::Deserialize;
 use tracing::info;
 
@@ -23,25 +24,33 @@ struct SearchParams {
 }
 
 pub fn routes() -> Router {
-    Router::new().route("/search", get(search_handler))
+    // Need to implement 404 errors
+    Router::new()
+        .merge(SpaRouter::new("/", "frontend").index_file("index.html"))
+        .route("/search", get(search_handler))
 }
 
 async fn search_handler(params: Query<SearchParams>) -> Redirect {
     println!("{}", params.query);
 
     let split = params.query.split_whitespace().collect::<Vec<_>>();
-    let cmd = split[0];
+    let cmd = split[0].to_string();
     let query = split[1..].join(" ");
 
-    match cmd {
-        "cargo" => Cargo::search(None, params.query.clone()),
-        "ddg" => DuckDuckGo::search(None, params.query.clone()),
+    match cmd.as_str() {
+        "cargo" | "c" | "cr" => Cargo::search(None, query),
+        "ddg" => DuckDuckGo::search(None, query),
         // "github" => github::search(params.query).await,
         // "yt" => yt::search(params.query).await,
-        "g" => Google::search(Some(cmd.to_string()), query),
+        "g" | "gm" => Google::search(Some(cmd.to_string()), query),
         _ => {
             info!("Invalid command... Redirecting to ddg");
-            todo!("Redirect to DuckDuckGo");
+
+            if query.len() > 0 {
+                DuckDuckGo::search(None, query)
+            } else {
+                Redirect::to("/")
+            }
         }
     }
 }

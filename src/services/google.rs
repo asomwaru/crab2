@@ -12,7 +12,7 @@ impl SearchQuery for Google {
     fn search(cmd: Option<String>, query: String) -> Redirect {
         if cmd.is_none() {
             error!("No argument specified for Google Items");
-            return Redirect::to("/");
+            return Redirect::permanent("/");
         }
 
         let command = cmd.unwrap();
@@ -20,12 +20,12 @@ impl SearchQuery for Google {
         match command.as_str() {
             "g" => {
                 let uri = format!("https://www.google.com/search?q={}", &query);
-                Redirect::to(&uri)
+                Redirect::permanent(&uri)
             }
-            "gm" => Redirect::to("https://mail.google.com/"),
+            "gm" => Redirect::permanent("https://mail.google.com/"),
             _ => {
                 error!("No argument specified for Google Items");
-                return Redirect::to("/");
+                return Redirect::permanent("/");
             }
         }
     }
