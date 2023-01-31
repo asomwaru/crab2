@@ -1,14 +1,15 @@
 // crates.io search
 
-use axum::response::Redirect;
-
 use crate::helpers::SearchQuery;
 
 pub struct Cargo;
 
 impl SearchQuery for Cargo {
-    fn search(_: Option<String>, query: String) -> Redirect {
-        let uri = format!("https://crates.io/search?q={}", query);
-        Redirect::to(&uri)
+    fn search(_: Option<String>, query: String) -> String {
+        if query.len() > 0 {
+            format!("https://crates.io/search?q={}", query)
+        } else {
+            "https://crates.io".to_string()
+        }
     }
 }

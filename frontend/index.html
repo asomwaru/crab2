@@ -37,13 +37,17 @@
 	window.onload = (e) => search.focus();
 	search.addEventListener("keydown", async (e) => {
 		if (e.key === 'Enter') {
-			console.log(search.value);
-			const response = await fetch(`${window.location}search?query=${search.value}`, {
-				method: "GET",
-				mode: "cors",
-			});
-			const data = await response.json();
-			console.log(data);
+			try {
+				const response = await fetch(`${window.location}search?query=${search.value}`, {
+					method: "GET",
+					mode: "cors",
+				});
+
+				const uri = await response.json();
+				window.location.href = uri;
+			} catch (err) {
+				console.error(err);
+			}
 		}
 	});
 </script>

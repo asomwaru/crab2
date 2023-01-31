@@ -1,7 +1,5 @@
 use clap::Parser;
 use dirs::home_dir;
-use http::Method;
-use tower_http::cors::{Any, CorsLayer};
 
 use std::fs::create_dir_all;
 use std::net::IpAddr;
@@ -40,11 +38,8 @@ async fn main() {
         .init();
 
     let args = Cli::parse();
-    let cors = CorsLayer::new()
-        .allow_methods([Method::GET, Method::POST])
-        .allow_origin(Any);
 
-    let app = routes().layer(cors);
+    let app = routes();
 
     // run it
     let addr = SocketAddr::from((args.address, args.port));

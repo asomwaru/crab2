@@ -10,13 +10,24 @@ use google::Google;
 
 use crate::helpers::SearchQuery;
 
+use std::time::Duration;
+
 use axum::extract::Query;
-use axum::response::Redirect;
+use axum::response::IntoResponse;
 use axum::routing::get;
+use axum::Json;
 use axum::Router;
 use axum_extra::routing::SpaRouter;
+use http::Method;
+use http::Request;
+use http::Response;
+use hyper::Body;
 use serde::Deserialize;
+use tower_http::cors::Any;
+use tower_http::cors::CorsLayer;
+use tower_http::trace::TraceLayer;
 use tracing::info;
+use tracing::Span;
 
 #[derive(Deserialize, Debug)]
 struct SearchParams {
@@ -28,16 +39,30 @@ pub fn routes() -> Router {
     Router::new()
         .merge(SpaRouter::new("/", "frontend").index_file("index.html"))
         .route("/search", get(search_handler))
+        .layer(
+            CorsLayer::new()
+                .allow_origin(Any)
+                .allow_methods([Method::GET, Method::POST]),
+        )
+        .layer(
+            TraceLayer::new_for_http()
+                .on_request(|request: &Request<Body>, _span: &Span| {
+                    tracing::info!("started {} {}", request.method(), request.uri().path());
+                    info!("Shape of request: {:#?}", request);
+                })
+                .on_response(|response: &Response<_>, latency: Duration, _span: &Span| {
+                    tracing::info!("response: {:#?}", response);
+                    tracing::info!("response generated in {:?}", latency);
+                }),
+        )
 }
 
-async fn search_handler(params: Query<SearchParams>) -> Redirect {
-    println!("{}", params.query);
-
+async fn search_handler(params: Query<SearchParams>) -> impl IntoResponse {
     let split = params.query.split_whitespace().collect::<Vec<_>>();
     let cmd = split[0].to_string();
     let query = split[1..].join(" ");
 
-    match cmd.as_str() {
+    let uri = match cmd.as_str() {
         "cargo" | "c" | "cr" => Cargo::search(None, query),
         "ddg" => DuckDuckGo::search(None, query),
         // "github" => github::search(params.query).await,
@@ -49,8 +74,10 @@ async fn search_handler(params: Query<SearchParams>) -> Redirect {
             if query.len() > 0 {
                 DuckDuckGo::search(None, query)
             } else {
-                Redirect::to("/")
+                "/".to_string()
             }
         }
-    }
+    };
+
+    Json(uri)
 }
