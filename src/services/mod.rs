@@ -10,8 +10,6 @@ use google::Google;
 
 use crate::helpers::SearchQuery;
 
-use std::time::Duration;
-
 use axum::extract::Query;
 use axum::response::IntoResponse;
 use axum::routing::get;
@@ -19,15 +17,9 @@ use axum::Json;
 use axum::Router;
 use axum_extra::routing::SpaRouter;
 use http::Method;
-use http::Request;
-use http::Response;
-use hyper::Body;
 use serde::Deserialize;
 use tower_http::cors::Any;
 use tower_http::cors::CorsLayer;
-use tower_http::trace::TraceLayer;
-use tracing::info;
-use tracing::Span;
 
 #[derive(Deserialize, Debug)]
 struct SearchParams {
@@ -43,17 +35,6 @@ pub fn routes() -> Router {
             CorsLayer::new()
                 .allow_origin(Any)
                 .allow_methods([Method::GET, Method::POST]),
-        )
-        .layer(
-            TraceLayer::new_for_http()
-                .on_request(|request: &Request<Body>, _span: &Span| {
-                    tracing::info!("started {} {}", request.method(), request.uri().path());
-                    info!("Shape of request: {:#?}", request);
-                })
-                .on_response(|response: &Response<_>, latency: Duration, _span: &Span| {
-                    tracing::info!("response: {:#?}", response);
-                    tracing::info!("response generated in {:?}", latency);
-                }),
         )
 }
 
