@@ -20,6 +20,7 @@ use http::Method;
 use serde::Deserialize;
 use tower_http::cors::Any;
 use tower_http::cors::CorsLayer;
+use tracing::info;
 
 #[derive(Deserialize, Debug)]
 struct SearchParams {
