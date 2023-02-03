@@ -10,6 +10,14 @@ This "search engine" has support for these different sites:
 - [github.com](https://github.com)
 - [youtube.com](https://youtube.com)
 
+## Todos
+
+[X] Setup Axum
+[X] Create a simple frontend to view
+[ ] Create redirects for all major services
+[ ] Make into browser extension
+[ ] Have it identified as a search engine for browsers
+
 ## Technologies
 
 This "engine" uses Rust with Axum, Tokio, and Serde. It also has usage logging with tracing and tracing-subscriber.
