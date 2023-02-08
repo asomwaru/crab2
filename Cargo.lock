@@ -159,6 +159,7 @@ dependencies = [
  "dirs",
  "http",
  "hyper",
+ "once_cell",
  "serde",
  "tokio",
  "tower",
