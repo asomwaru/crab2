@@ -12,11 +12,11 @@ This "search engine" has support for these different sites:
 
 ## Todos
 
-[X] Setup Axum
-[X] Create a simple frontend to view
-[ ] Create redirects for all major services
-[ ] Make into browser extension
-[ ] Have it identified as a search engine for browsers
+- [X] Setup Axum
+- [X] Create a simple frontend to view
+- [ ] Create redirects for all major services
+- [ ] Make into browser extension
+- [ ] Have it identified as a search engine for browsers
 
 ## Technologies
 
