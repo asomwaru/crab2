@@ -19,5 +19,5 @@ pub fn port_in_range(s: &str) -> Result<u16, String> {
 }
 
 pub trait SearchQuery {
-    fn search(cmd: Option<String>, query: String) -> String;
+    fn search(&self, cmd: Option<String>, query: String) -> String;
 }

@@ -9,7 +9,7 @@ use crate::helpers::SearchQuery;
 pub struct Google;
 
 impl SearchQuery for Google {
-    fn search(cmd: Option<String>, query: String) -> String {
+    fn search(&self, cmd: Option<String>, query: String) -> String {
         if cmd.is_none() {
             error!("No argument specified for Google Items");
             return "/".to_string();

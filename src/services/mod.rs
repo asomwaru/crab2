@@ -6,6 +6,7 @@ mod yt;
 
 use cargo::Cargo;
 use ddg::DuckDuckGo;
+use github::GitHub;
 use google::Google;
 
 use crate::helpers::SearchQuery;
@@ -45,16 +46,16 @@ async fn search_handler(params: Query<SearchParams>) -> impl IntoResponse {
     let query = split[1..].join(" ");
 
     let uri = match cmd.as_str() {
-        "cargo" | "c" | "cr" => Cargo::search(None, query),
-        "ddg" => DuckDuckGo::search(None, query),
-        // "github" => github::search(params.query).await,
-        // "yt" => yt::search(params.query).await,
-        "g" | "gm" => Google::search(Some(cmd.to_string()), query),
+        "cargo" | "c" | "cr" => Cargo.search(None, query),
+        "ddg" => DuckDuckGo.search(None, query),
+        "github" | "gh" => GitHub.search(None, query),
+        // "yt" => yt.search(params.query).await,
+        "g" | "gm" => Google.search(Some(cmd.to_string()), query),
         _ => {
             info!("Invalid command... Redirecting to ddg");
 
             if query.len() > 0 {
-                DuckDuckGo::search(None, query)
+                DuckDuckGo.search(None, query)
             } else {
                 "/".to_string()
             }
